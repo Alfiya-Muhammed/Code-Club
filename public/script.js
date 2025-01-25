@@ -55,19 +55,31 @@ function updateTimers() {
 
 // Function to start the simulation
 function startSimulation() {
-    const location = document.getElementById('location').value.trim();
+    const location = document.getElementById("location").value.trim();
 
-    if (location === '') {
-        alert('Please enter a location to start the simulation.');
+    if (location === "") {
+        alert("Please enter a location to start the simulation.");
         return;
     }
 
-    currentLight = 'red';
+    // Send location to backend
+    fetch("/api/location", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ location }),
+    })
+        .then((response) => response.json())
+        .then((data) => console.log(data.message))
+        .catch((error) => console.error("Error:", error));
+
+    currentLight = "red";
     timerValue = timers[currentLight];
     setActiveLight(currentLight);
     updateTimers();
-    document.querySelector('button[onclick="pedestrianRequest()"]').disabled = false; // Enable pedestrian button
 }
+
 
 // Function to handle pedestrian crossing requests
 function pedestrianRequest() {

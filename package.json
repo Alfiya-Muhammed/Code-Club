@@ -1,0 +1,15 @@
+{
+  "name": "trafficlightsimulator",
+  "version": "1.0.0",
+  "description": "This project simulates a traffic light system with dynamic cycling of red, yellow, and green lights. Users can input a location (without Google Maps integration) \r and see a traffic light simulation. The project is built using HTML, CSS, and JavaScript.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
