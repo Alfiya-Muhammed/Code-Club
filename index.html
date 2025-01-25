@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Light Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Traffic Light Simulator</h1>
+
+    <!-- Location Input Section -->
+    <div id="location-input">
+        <!--<label for="location">Enter Location (City or Street):</label>-->
+        <input type="text" id="location" placeholder="Enter location">
+    </div>
+
+    <!-- Traffic Light Section -->
+    <div id="traffic-light">
+        <div class="light red"></div>
+        <div class="timer" id="red-timer">10s</div>
+        <div class="light yellow"></div>
+        <div class="timer" id="yellow-timer">5s</div>
+        <div class="light green"></div>
+        <div class="timer" id="green-timer">15s</div>
+    </div>
+
+    <!-- Emergency Message -->
+    <div id="emergency-message" class="hidden">
+        <p>🚨 Emergency Vehicle: Other vehicles and pedestrians please wait! 🚨</p>
+    </div>
+
+    
+    
+
+    <!-- Button Section -->
+    <div id="controls">
+        <button onclick="startSimulation()">Start Simulation</button>
+        <button onclick="pedestrianRequest()">Pedestrian Crossing Request</button>
+        <button onclick="emergencyOverride()">Emergency Vehicle Override</button>
+        <button onclick="stopSimulation()">Stop Simulation</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
