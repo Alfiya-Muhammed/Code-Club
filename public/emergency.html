@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Override</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Emergency Vehicle Notification</h1>
+    <a href="/index.html" style="display: block; margin-top: 20px; color: red">Go to Traffic Light Simulator</a>
+
+    <p>Enter the location of the emergency vehicle and click the button below to notify the simulator.</p>
+    <input type="text" id="emergency-location" placeholder="Enter location">
+    <button onclick="sendEmergency()">Notify Traffic Simulator</button>
+
+    <p id="response-message" style="margin-top: 20px; color: green;"></p>
+
+    <script>
+        function sendEmergency() {
+            const location = document.getElementById('emergency-location').value.trim();
+
+            if (!location) {
+                alert('Please enter the location of the emergency vehicle.');
+                return;
+            }
+
+            // Send the emergency notification to the server
+            fetch('/api/emergency', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ location })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageElement = document.getElementById('response-message');
+                if (data.success) {
+                    messageElement.textContent = `Emergency at "${location}" has been successfully sent to the simulator.`;
+                } else {
+                    messageElement.textContent = 'Failed to notify the simulator. Please try again.';
+                    messageElement.style.color = 'red';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while sending the emergency information.');
+            });
+        }
+    </script>
+</body>
+</html>

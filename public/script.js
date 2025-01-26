@@ -29,7 +29,7 @@ function updateLight() {
 // Function to set the active light and update the UI
 function setActiveLight(light) {
     const lights = document.querySelectorAll('.light');
-    lights.forEach(light => light.classList.remove('active'));
+    lights.forEach((l) => l.classList.remove('active'));
     document.querySelector(`.${light}`).classList.add('active');
 
     updateTimers();
@@ -55,31 +55,36 @@ function updateTimers() {
 
 // Function to start the simulation
 function startSimulation() {
-    const location = document.getElementById("location").value.trim();
+    const location = document.getElementById('location').value.trim();
 
-    if (location === "") {
-        alert("Please enter a location to start the simulation.");
+    if (!location) {
+        alert('Please enter a location to start the simulation.');
         return;
     }
 
     // Send location to backend
-    fetch("/api/location", {
-        method: "POST",
+    fetch('/api/location', {
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ location }),
+        body: JSON.stringify({ location })
     })
         .then((response) => response.json())
         .then((data) => console.log(data.message))
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => console.error('Error:', error));
 
-    currentLight = "red";
+    currentLight = 'red';
     timerValue = timers[currentLight];
     setActiveLight(currentLight);
     updateTimers();
-}
 
+    // Enable pedestrian button
+    document.querySelector('button[onclick="pedestrianRequest()"]').disabled = false;
+
+    // Start listening for emergencies
+    listenForEmergencies();
+}
 
 // Function to handle pedestrian crossing requests
 function pedestrianRequest() {
@@ -105,40 +110,48 @@ function pedestrianRequest() {
 }
 
 // Function to handle emergency vehicle override
-function emergencyOverride() {
+function handleEmergency(location) {
     if (!interval) {
         alert('Start the simulation first.');
         return;
     }
 
+    console.log(`Emergency vehicle reported at: ${location}`);
     clearInterval(interval);
     emergencyActive = true;
 
-    // Display the emergency message
-    document.getElementById('emergency-message').classList.remove('hidden');
+    // Display emergency message
+    const emergencyMessage = document.getElementById('emergency-message');
+    emergencyMessage.textContent = `Emergency vehicle at "${location}". Switching lights for priority.`;
+    emergencyMessage.classList.remove('hidden');
 
-    // Disable pedestrian button
-    document.querySelector('button[onclick="pedestrianRequest()"]').disabled = true;
-
-    // Immediately switch to green light for emergency vehicles
+    // Immediately switch to green light
     currentLight = 'green';
     timerValue = timers.green;
     setActiveLight(currentLight);
 
-    // After the green light for the emergency ends, switch to red
+    // Resume normal operations after emergency duration
     setTimeout(() => {
-        emergencyActive = false; // End emergency mode
-        document.getElementById('emergency-message').classList.add('hidden'); // Hide emergency message
+        emergencyActive = false;
+        emergencyMessage.classList.add('hidden');
 
         // Resume red light and normal sequence
         currentLight = 'red';
         timerValue = timers.red;
         setActiveLight(currentLight);
         updateTimers();
+    }, timers.green * 1000); // Simulate green light duration for emergency
+}
 
-        // Enable pedestrian button after emergency
-        document.querySelector('button[onclick="pedestrianRequest()"]').disabled = false;
-    }, timers.green * 1000); // Wait for the green light duration
+// Function to simulate listening for emergency events
+function listenForEmergencies() {
+    console.log('Listening for emergency events...');
+
+    // Simulate receiving an emergency event after some time
+    setTimeout(() => {
+        const simulatedLocation = 'Main Street';
+        handleEmergency(simulatedLocation);
+    }, 15000); // Simulate an emergency event after 15 seconds
 }
 
 // Function to stop the simulation
@@ -152,7 +165,7 @@ function stopSimulation() {
 
     // Reset all lights and timers
     const lights = document.querySelectorAll('.light');
-    lights.forEach(light => light.classList.remove('active'));
+    lights.forEach((light) => light.classList.remove('active'));
 
     document.getElementById('red-timer').innerText = `10s`;
     document.getElementById('yellow-timer').innerText = `5s`;

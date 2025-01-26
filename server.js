@@ -36,6 +36,22 @@ app.post("/login", (req, res) => {
     });
 });
 
+// API endpoint to handle emergency vehicle notifications
+app.post("/api/emergency", (req, res) => {
+    const { location } = req.body;
+
+    if (!location) {
+        return res.status(400).json({ success: false, message: "Location is required for emergency notification." });
+    }
+
+    console.log(`Emergency vehicle reported at: ${location}`);
+
+    // Logic to notify the Traffic Light Simulator can go here
+    // For now, just simulate by sending a response to the client
+    res.status(200).json({ success: true, message: `Emergency at "${location}" notified to the simulator.` });
+});
+
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
